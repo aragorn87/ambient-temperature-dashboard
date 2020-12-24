@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import PlotlyChart from './PlotlyChart'
 
 function App() {
-  console.log(process.env.PORT)
   const [chartData, setChartData] = useState([])
   const [latestTs, setLatestTs] = useState()
   const [latestReading, setLatestReading] = useState()
