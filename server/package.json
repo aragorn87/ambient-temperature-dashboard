@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-serial": "node serial",
-    "start-server": "node mongotest",
+    "start-serial": "node ingestData",
+    "start-server": "node server",
     "start": "npm-run-all --parallel start-serial start-server"
   },
   "keywords": [],

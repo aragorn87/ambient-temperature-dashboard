@@ -1,37 +1,32 @@
 import React, { useEffect, useState } from 'react'
-import PlotlyTest from './plotlytest'
-
+import PlotlyChart from './PlotlyChart'
 
 function App() {
-  const [stateData, setStateData] = useState([])
+  console.log(process.env.PORT)
   const [chartData, setChartData] = useState([])
   const [latestTs, setLatestTs] = useState()
   const [latestReading, setLatestReading] = useState()
 
   async function getData() {
-    const url = "http://localhost:3000/readings"
+    let datestring, numberReading
+    let tempArr = []
+    const url = `http://localhost:3000/readings?limit=100`
     const response =  await fetch(url)
     const data =  await response.json()
-    // this.setState({latestData: data[0]})
-    let dateString = await new Date(data[0]['ts']).toLocaleString('en-US', { timeZone: 'Asia/Singapore' })
-    let numberReading = await data[0]['value']['$numberDecimal']
-    setLatestTs(dateString)
-    setLatestReading(numberReading)
-    let tempArr = []
     data.forEach((entry, index) => {
-      let tempDate = new Date(entry['ts'])
-      let newDate  = new Date(tempDate.getTime() + 8 * 60 * 60 * 1000)
-      let datetobepushed = newDate.toISOString()
-      tempArr.push({x: datetobepushed, y: parseFloat(entry['value']['$numberDecimal'])})
+      datestring  = (new Date((new Date(entry['ts'])).getTime() + 8 * 60 * 60 * 1000)).toISOString() //converting to SG local time, toLocaleString messes up with Plotly formatting strings
+      numberReading = parseFloat(entry['value']['$numberDecimal'])
+      tempArr.push({x: datestring, y:numberReading})
     })
-    setStateData(data)
+    
+    setLatestTs(tempArr[0]['x'])
+    setLatestReading(tempArr[0]['y'])
     setChartData(tempArr)
   }
 
   useEffect(() => {
-    const intervalID = setInterval(() => getData(), 10000)
+    const intervalID = setInterval(() => getData(), 10000) //refresh page every 10 seconds for new data
     return () =>{
-      console.log("Unmounting")
       clearInterval(intervalID)}
   })
 
@@ -44,7 +39,7 @@ function App() {
         <p className="italic"> updated at {latestTs}</p> </div>
         :"Waiting for reading"}
         </div>
-        <PlotlyTest data = {chartData.slice(0,400)}/>
+        <PlotlyChart data = {chartData.slice(0,100)}/>
       </div>
   )
 }

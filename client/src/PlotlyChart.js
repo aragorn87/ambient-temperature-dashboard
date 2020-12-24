@@ -1,7 +1,7 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
 
-class PlotlyTest extends React.Component {
+class PlotlyChart extends React.Component {
   render() {
     let x = []
     let y = []
@@ -27,4 +27,4 @@ class PlotlyTest extends React.Component {
   }
 }
 
-export default PlotlyTest
+export default PlotlyChart
